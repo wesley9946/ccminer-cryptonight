@@ -477,7 +477,7 @@ bool rpc2_job_decode(const json_t *job, struct work *work) {
                 hashrate += thr_hashrates[i];
             pthread_mutex_unlock(&stats_lock);
             double difficulty = (((double) 0xffffffff) / target);
-            applog(LOG_INFO, "Pool set diff to %g", difficulty);
+            applog(LOG_INFO, "Difficulty has been set to %g", difficulty);
             rpc2_target = target;
         }
 
@@ -1328,7 +1328,7 @@ start:
             char *start_job_id = strdup(g_work.job_id);
 			if (work_decode(json_object_get(val, "result"), &g_work)) {
                 if (strcmp(start_job_id, g_work.job_id)) {
-        			if (!opt_quiet) applog(LOG_INFO, "LONGPOLL detected new block");
+        			if (!opt_quiet) applog(LOG_INFO, "LONGPOLL has detected a new block");
                     if (opt_debug)
                         applog(LOG_DEBUG, "DEBUG: got new work");
                     time(&g_work_time);
@@ -1449,7 +1449,7 @@ static void *stratum_thread(void *userdata)
                 stratum_gen_work(&stratum, &g_work);
                 time(&g_work_time);
                 pthread_mutex_unlock(&g_work_lock);
-                applog(LOG_INFO, "Stratum detected new block");
+                applog(LOG_INFO, "Stratum has detected a new block");
                 restart_threads();
             }
         } else {
@@ -1460,7 +1460,7 @@ static void *stratum_thread(void *userdata)
                 time(&g_work_time);
                 pthread_mutex_unlock(&g_work_lock);
                 if (stratum.job.clean) {
-                    if (!opt_quiet) applog(LOG_INFO, "Stratum detected new block");
+                    if (!opt_quiet) applog(LOG_INFO, "Stratum has detected a new block");
                     restart_threads();
                 }
             }
@@ -1473,7 +1473,7 @@ static void *stratum_thread(void *userdata)
 			s = stratum_recv_line(&stratum);
 		if (!s) {
 			stratum_disconnect(&stratum);
-			applog(LOG_ERR, "Stratum connection interrupted");
+			applog(LOG_ERR, "Stratum lost connection");
 			continue;
 		}
 		if (!stratum_handle_method(&stratum, s))
